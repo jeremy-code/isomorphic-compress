@@ -15,10 +15,10 @@ type Fixture = {
 };
 
 // The ninth byte in the gzip header is defined as the operating system.
-// Normalize it as 3 (for Unix)
+// Normalize it as 255 (for unknown)
 // https://www.rfc-editor.org/info/rfc1952/#page-7
 const normalizeGzip = (bytes: Uint8Array<ArrayBuffer>) => {
-  bytes[9] = 0;
+  bytes[9] = 255;
   return bytes;
 };
 
