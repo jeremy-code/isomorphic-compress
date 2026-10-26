@@ -11,20 +11,38 @@
 ## Installation
 
 ```shell
-git clone https://github.com/jeremy-code/isomorphic-compress.git
-cd isomorphic-compress
-pnpm install
+npm install libexif-wasm # npm
+yarn add libexif-wasm    # yarn
+pnpm add libexif-wasm    # pnpm
 ```
 
 ## Usage
 
-```shell
-# Lint and format code with Oxlint and Oxfmt
-pnpm lint
-pnpm format
+```ts
+// Import `compress` and `decompress` to select formats "gzip", "deflate" (zlib), or "deflate-raw"
+import { compress, decompress } from "isomorphic-compress";
 
-# Build
-pnpm build
+// "H4sIAAAAAAAAE/NIzcnJVyjPL8pJUQQAlRmFGwwAAAA="
+(await compress(new TextEncoder().encode("Hello world!"), "gzip")).toBase64();
+// "Hello world!"
+new TextDecoder().decode(
+  await decompress(
+    Uint8Array.fromBase64("H4sIAAAAAAAAE/NIzcnJVyjPL8pJUQQAlRmFGwwAAAA="),
+    "gzip",
+  ),
+);
+
+// You can also import each format's respective function (deflate/inflate, gzip/gunzip, zlib/unzlib)
+import { zlib, unzlib } from "isomorphic-compress";
+
+(await zlib(new Uint8Array())).toBase64(); // "eJwDAAAAAAE="
+(await unzlib(Uint8Array.fromBase64("eJwDAAAAAAE="))).toBase64(); // ""
+
+// Each format (deflate, gzip, zlib)'s entrypoint is also exported
+import { deflate, inflate } from "isomorphic-compress/deflate.js";
+
+(await deflate(new Uint8Array())).toBase64(); // "AwA="
+(await inflate(Uint8Array.fromBase64("AwA="))).toBase64(); // ""
 ```
 
 ## License
