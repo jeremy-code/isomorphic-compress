@@ -1,4 +1,4 @@
-import { promisify, types } from "node:util";
+import { promisify } from "node:util";
 import { gunzip as zlibGunzip, gzip as zlibGzip } from "node:zlib";
 
 import type { BufferSource } from "../index.ts";
@@ -8,11 +8,9 @@ const gunzipAsync = /* @__PURE__ */ promisify(zlibGunzip);
 
 const gzip = async (data: BufferSource): Promise<Uint8Array<ArrayBuffer>> => {
   const compressedBuffer = await gzipAsync(
-    // This predicate is necessary because
+    // This cast is necessary because
     // `ArrayBufferView<ArrayBuffer> !== NodeJS.ArrayBufferView<ArrayBuffer>`
-    types.isArrayBufferView(data) || types.isArrayBuffer(data)
-      ? data
-      : Buffer.from(data.buffer, data.byteOffset, data.byteLength),
+    data as ArrayBuffer | NodeJS.ArrayBufferView<ArrayBuffer>,
   );
   // Convert Buffer to Uint8Array
   return new Uint8Array(
@@ -24,11 +22,7 @@ const gzip = async (data: BufferSource): Promise<Uint8Array<ArrayBuffer>> => {
 
 const gunzip = async (data: BufferSource): Promise<Uint8Array<ArrayBuffer>> => {
   const decompressedBuffer = await gunzipAsync(
-    // This predicate is necessary because
-    // `ArrayBufferView<ArrayBuffer> !== NodeJS.ArrayBufferView<ArrayBuffer>`
-    types.isArrayBufferView(data) || types.isArrayBuffer(data)
-      ? data
-      : Buffer.from(data.buffer, data.byteOffset, data.byteLength),
+    data as ArrayBuffer | NodeJS.ArrayBufferView<ArrayBuffer>,
   );
   // Convert Buffer to Uint8Array
   return new Uint8Array(

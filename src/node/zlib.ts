@@ -1,4 +1,4 @@
-import { promisify, types } from "node:util";
+import { promisify } from "node:util";
 import { deflate as zlibDeflate, inflate as zlibInflate } from "node:zlib";
 
 import type { BufferSource } from "../index.ts";
@@ -8,11 +8,9 @@ const inflateAsync = /* @__PURE__ */ promisify(zlibInflate);
 
 const zlib = async (data: BufferSource): Promise<Uint8Array<ArrayBuffer>> => {
   const compressedBuffer = await deflateAsync(
-    // This predicate is necessary because
+    // This cast is necessary because
     // `ArrayBufferView<ArrayBuffer> !== NodeJS.ArrayBufferView<ArrayBuffer>`
-    types.isArrayBufferView(data) || types.isArrayBuffer(data)
-      ? data
-      : Buffer.from(data.buffer, data.byteOffset, data.byteLength),
+    data as ArrayBuffer | NodeJS.ArrayBufferView<ArrayBuffer>,
   );
   // Convert Buffer to Uint8Array
   return new Uint8Array(
@@ -24,11 +22,7 @@ const zlib = async (data: BufferSource): Promise<Uint8Array<ArrayBuffer>> => {
 
 const unzlib = async (data: BufferSource): Promise<Uint8Array<ArrayBuffer>> => {
   const decompressedBuffer = await inflateAsync(
-    // This predicate is necessary because
-    // `ArrayBufferView<ArrayBuffer> !== NodeJS.ArrayBufferView<ArrayBuffer>`
-    types.isArrayBufferView(data) || types.isArrayBuffer(data)
-      ? data
-      : Buffer.from(data.buffer, data.byteOffset, data.byteLength),
+    data as ArrayBuffer | NodeJS.ArrayBufferView<ArrayBuffer>,
   );
   // Convert Buffer to Uint8Array
   return new Uint8Array(
