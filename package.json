@@ -53,7 +53,8 @@
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "lint": "oxlint",
-    "lint:fix": "oxlint --fix"
+    "lint:fix": "oxlint --fix",
+    "ci:publish": "./scripts/publish.sh"
   },
   "devDependencies": {
     "@changesets/cli": "^3.0.3",
