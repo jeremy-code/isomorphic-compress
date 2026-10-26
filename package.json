@@ -12,6 +12,7 @@
     "url": "git+https://github.com/jeremy-code/isomorphic-compress.git"
   },
   "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
     "./*": {
