@@ -5,8 +5,12 @@
 [github-actions]: https://www.github.com/jeremy-code/isomorphic-compress/actions/workflows/ci.yml
 [github-actions-badge]: https://www.github.com/jeremy-code/isomorphic-compress/actions/workflows/ci.yml/badge.svg
 [license-badge]: https://img.shields.io/github/license/jeremy-code/isomorphic-compress
+[npm-version-badge]: https://img.shields.io/npm/v/isomorphic-compress
+[npm-package]: https://www.npmjs.com/package/isomorphic-compress
+[npm-package-size-badge]: https://badgen.net/packagephobia/install/isomorphic-compress
+[npm-package-size]: https://packagephobia.com/result?p=isomorphic-compress
 
-[![GitHub Actions][github-actions-badge]][github-actions] [![License][license-badge]](LICENSE)
+[![GitHub Actions][github-actions-badge]][github-actions] [![License][license-badge]](LICENSE) [![NPM version][npm-version-badge]][npm-package] [![NPM package size][npm-package-size-badge]][npm-package-size]
 
 ## Installation
 
@@ -17,6 +21,8 @@ pnpm add libexif-wasm    # pnpm
 ```
 
 ## Usage
+
+Documentation is also avaliable at this URL: https://npmx.dev/package-docs/isomorphic-compress.
 
 ```ts
 // Import `compress` and `decompress` to select formats "gzip", "deflate" (zlib), or "deflate-raw"
