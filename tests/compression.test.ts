@@ -14,12 +14,22 @@ type Fixture = {
   output: Record<CompressionFormat, Uint8Array<ArrayBuffer>>;
 };
 
+// The ninth byte in the gzip header is defined as the operating system.
+// Normalize it as 3 (for Unix)
+// https://www.rfc-editor.org/info/rfc1952/#page-7
+const normalizeGzip = (bytes: Uint8Array<ArrayBuffer>) => {
+  bytes[9] = 0;
+  return bytes;
+};
+
 const FIXTURES = {
   "empty input": {
     input: new Uint8Array(),
     output: {
       // node -e 'console.log(await import("node:zlib").then(({ gzipSync }) => gzipSync(new Uint8Array([])).toBase64()))'
-      gzip: Uint8Array.fromBase64("H4sIAAAAAAAAEwMAAAAAAAAAAAA="),
+      gzip: normalizeGzip(
+        Uint8Array.fromBase64("H4sIAAAAAAAAEwMAAAAAAAAAAAA="),
+      ),
       // node -e 'console.log(await import("node:zlib").then(({ deflateSync }) => deflateSync(new Uint8Array([])).toBase64()))'
       deflate: Uint8Array.fromBase64("eJwDAAAAAAE="),
       // node -e 'console.log(await import("node:zlib").then(({ deflateRawSync }) => deflateRawSync(new Uint8Array([])).toBase64()))'
@@ -40,8 +50,10 @@ const FIXTURES = {
         "80jNyclXKM8vyklRVPgwv6eX68neBU+X7n2/p+fJjmnPp/a839PI9bhx8uOmyY8bVz9uXPi4cT1cAgA=",
       ),
       // node -e 'console.log(await import("node:zlib").then(({ gzipSync }) => gzipSync(new TextEncoder().encode("Hello world! 🌍\n你好，世界！\nこんにちは世界！")).toBase64()))'
-      gzip: Uint8Array.fromBase64(
-        "H4sIAAAAAAAAE/NIzcnJVyjPL8pJUVT4ML+nl+vJ3gVPl+59v6fnyY5pz6f2vN/TyPW4cfLjpsmPG1c/blz4uHE9XAIAf9JbfT0AAAA=",
+      gzip: normalizeGzip(
+        Uint8Array.fromBase64(
+          "H4sIAAAAAAAAE/NIzcnJVyjPL8pJUVT4ML+nl+vJ3gVPl+59v6fnyY5pz6f2vN/TyPW4cfLjpsmPG1c/blz4uHE9XAIAf9JbfT0AAAA=",
+        ),
       ),
     },
   },
@@ -60,8 +72,10 @@ const FIXTURES = {
         "FcxBDkAwGEThmaloomyc4K+lOESPokGsKhIH6NWxfvke8lMIgJ6ramV1IrynO7cd6BbOZFVSMgwwRvUMLhkNk+4IU+RfQjAFjM2Vy8GW+LncN34B",
       ),
       // node -e 'console.log(await import("node:zlib").then(({ gzipSync }) => gzipSync(Uint8Array.fromBase64("AGFzbQEAAAABBwFgAn9/AX8DAgEABwcBA2djZAAACiwBKgEBfwJAAkAgAA0AIAEhAgwBCwNAIAEgACICcCEAIAIhASAADQALCyACCwASBG5hbWUBBgEAA2djZAIDAQAA")).toBase64()))'
-      gzip: Uint8Array.fromBase64(
-        "H4sIAAAAAAAAExXMQQ5AMBhE4ZmpaKJsnOCvpThEj6JBrCoSB+jVsX75HvJTCICeq2pldSK8pzu3HegWzmRVUjIMMEb1DC4ZDZPuCFPkX0IwBYzNlcvBlvi53Dd+AcnVmDBgAAAA",
+      gzip: normalizeGzip(
+        Uint8Array.fromBase64(
+          "H4sIAAAAAAAAExXMQQ5AMBhE4ZmpaKJsnOCvpThEj6JBrCoSB+jVsX75HvJTCICeq2pldSK8pzu3HegWzmRVUjIMMEb1DC4ZDZPuCFPkX0IwBYzNlcvBlvi53Dd+AcnVmDBgAAAA",
+        ),
       ),
     },
   },
@@ -97,8 +111,8 @@ describe("compress", () => {
       DataView: new DataView(new ArrayBuffer()),
     }),
   )("handles %s for input", async ([, input]) => {
-    expect(await compress(input, "deflate")).toEqual(
-      FIXTURES["empty input"].output.deflate,
+    expect(normalizeGzip(await compress(input, "gzip"))).toEqual(
+      FIXTURES["empty input"].output.gzip,
     );
   });
 
@@ -107,11 +121,14 @@ describe("compress", () => {
       const fixture = FIXTURES["UTF-8 text"];
       const input = new Uint8Array(fixture.input.length + 20).fill(0xff);
       input.set(fixture.input, 10);
+      const compressedInput = await compress(
+        input.subarray(10, 10 + fixture.input.length),
+        compressionFormat,
+      );
       expect(
-        await compress(
-          input.subarray(10, 10 + fixture.input.length),
-          compressionFormat,
-        ),
+        compressionFormat === "gzip"
+          ? normalizeGzip(compressedInput)
+          : compressedInput,
       ).toEqual(fixture.output[compressionFormat]);
     });
 
@@ -127,9 +144,16 @@ describe("compress", () => {
     it.for(Object.entries(FIXTURES))(
       "returns expected input for %s",
       async ([, fixture]) => {
-        expect(await compress(fixture.input, compressionFormat)).toEqual(
-          fixture.output[compressionFormat],
+        const compressedInput = await compress(
+          fixture.input,
+          compressionFormat,
         );
+
+        expect(
+          compressionFormat === "gzip"
+            ? normalizeGzip(compressedInput)
+            : compressedInput,
+        ).toEqual(fixture.output[compressionFormat]);
       },
     );
   });
@@ -152,8 +176,8 @@ describe("decompress", () => {
       DataView: new DataView(new ArrayBuffer()),
     }),
   )("handles %s for input", async ([, input]) => {
-    expect(await compress(input, "deflate-raw")).toEqual(
-      FIXTURES["empty input"].output["deflate-raw"],
+    expect(normalizeGzip(await compress(input, "gzip"))).toEqual(
+      FIXTURES["empty input"].output["gzip"],
     );
   });
 
