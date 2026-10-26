@@ -97,8 +97,8 @@ describe("compress", () => {
       DataView: new DataView(new ArrayBuffer()),
     }),
   )("handles %s for input", async ([, input]) => {
-    expect(await compress(input, "gzip")).toEqual(
-      FIXTURES["empty input"].output.gzip,
+    expect(await compress(input, "deflate")).toEqual(
+      FIXTURES["empty input"].output.deflate,
     );
   });
 
@@ -152,8 +152,8 @@ describe("decompress", () => {
       DataView: new DataView(new ArrayBuffer()),
     }),
   )("handles %s for input", async ([, input]) => {
-    expect(await compress(input, "gzip")).toEqual(
-      FIXTURES["empty input"].output.gzip,
+    expect(await compress(input, "deflate-raw")).toEqual(
+      FIXTURES["empty input"].output["deflate-raw"],
     );
   });
 
