@@ -6,7 +6,9 @@ import type { BufferSource } from "../index.ts";
 const gzipAsync = /* @__PURE__ */ promisify(zlibGzip);
 const gunzipAsync = /* @__PURE__ */ promisify(zlibGunzip);
 
-const gzip = async (data: BufferSource): Promise<Uint8Array<ArrayBuffer>> => {
+const gzip = /* @__NO_SIDE_EFFECTS__ */ async (
+  data: BufferSource,
+): Promise<Uint8Array<ArrayBuffer>> => {
   const compressedBuffer = await gzipAsync(
     // This cast is necessary because
     // `ArrayBufferView<ArrayBuffer> !== NodeJS.ArrayBufferView<ArrayBuffer>`
@@ -20,7 +22,9 @@ const gzip = async (data: BufferSource): Promise<Uint8Array<ArrayBuffer>> => {
   );
 };
 
-const gunzip = async (data: BufferSource): Promise<Uint8Array<ArrayBuffer>> => {
+const gunzip = /* @__NO_SIDE_EFFECTS__ */ async (
+  data: BufferSource,
+): Promise<Uint8Array<ArrayBuffer>> => {
   const decompressedBuffer = await gunzipAsync(
     data as ArrayBuffer | NodeJS.ArrayBufferView<ArrayBuffer>,
   );

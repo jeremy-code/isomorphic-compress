@@ -9,7 +9,7 @@ import type { BufferSource } from "../index.ts";
 const deflateRawAsync = /* @__PURE__ */ promisify(zlibDeflateRaw);
 const inflateRawAsync = /* @__PURE__ */ promisify(zlibInflateRaw);
 
-const deflate = async (
+const deflate = /* @__NO_SIDE_EFFECTS__ */ async (
   data: BufferSource,
 ): Promise<Uint8Array<ArrayBuffer>> => {
   const compressedBuffer = await deflateRawAsync(
@@ -25,7 +25,7 @@ const deflate = async (
   );
 };
 
-const inflate = async (
+const inflate = /* @__NO_SIDE_EFFECTS__ */ async (
   data: BufferSource,
 ): Promise<Uint8Array<ArrayBuffer>> => {
   const decompressedBuffer = await inflateRawAsync(

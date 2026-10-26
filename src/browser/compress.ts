@@ -1,6 +1,6 @@
 import type { BufferSource, CompressionFormat } from "../index.ts";
 
-const compress = async (
+const compress = /* @__NO_SIDE_EFFECTS__ */ async (
   val: BufferSource,
   format: CompressionFormat,
 ): Promise<Uint8Array<ArrayBuffer>> => {
@@ -22,7 +22,7 @@ const compress = async (
   );
 };
 
-const decompress = async (
+const decompress = /* @__NO_SIDE_EFFECTS__ */ async (
   val: BufferSource,
   format: CompressionFormat,
 ): Promise<Uint8Array<ArrayBuffer>> => {

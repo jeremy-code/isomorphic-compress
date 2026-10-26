@@ -3,7 +3,7 @@ import { deflate, inflate } from "./deflate.ts";
 import { gzip, gunzip } from "./gzip.ts";
 import { zlib, unzlib } from "./zlib.ts";
 
-const compress = async (
+const compress = /* @__NO_SIDE_EFFECTS__ */ async (
   val: BufferSource,
   format: CompressionFormat,
 ): Promise<Uint8Array<ArrayBuffer>> => {
@@ -19,7 +19,7 @@ const compress = async (
   }
 };
 
-const decompress = async (
+const decompress = /* @__NO_SIDE_EFFECTS__ */ async (
   val: BufferSource,
   format: CompressionFormat,
 ): Promise<Uint8Array<ArrayBuffer>> => {
