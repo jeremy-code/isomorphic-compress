@@ -168,16 +168,26 @@ describe("decompress", () => {
 
   it.for(
     Object.entries({
-      Uint8Array: new Uint8Array(),
-      Uint16Array: new Uint16Array(),
-      Int32Array: new Int32Array(),
-      Float64Array: new Float64Array(),
-      ArrayBuffer: new ArrayBuffer(),
-      DataView: new DataView(new ArrayBuffer()),
+      Uint8Array: new Uint8Array(
+        FIXTURES["empty input"].output.gzip.slice().buffer,
+      ),
+      Uint16Array: new Uint16Array(
+        FIXTURES["empty input"].output.gzip.slice().buffer,
+      ),
+      Int32Array: new Int32Array(
+        FIXTURES["empty input"].output.gzip.slice().buffer,
+      ),
+      Float16Array: new Float16Array(
+        FIXTURES["empty input"].output.gzip.slice().buffer,
+      ),
+      ArrayBuffer: FIXTURES["empty input"].output.gzip.slice().buffer,
+      DataView: new DataView(
+        FIXTURES["empty input"].output.gzip.slice().buffer,
+      ),
     }),
   )("handles %s for input", async ([, input]) => {
-    expect(normalizeGzip(await compress(input, "gzip"))).toEqual(
-      FIXTURES["empty input"].output["gzip"],
+    expect(normalizeGzip(await decompress(input, "gzip"))).toEqual(
+      FIXTURES["empty input"].input,
     );
   });
 
