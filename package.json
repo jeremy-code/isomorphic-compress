@@ -1,0 +1,62 @@
+{
+  "name": "isomorphic-compress",
+  "version": "0.0.0",
+  "description": "",
+  "keywords": [],
+  "homepage": "https://github.com/jeremy-code/isomorphic-compress#readme",
+  "bugs": "https://github.com/jeremy-code/isomorphic-compress/issues",
+  "license": "MIT",
+  "author": "Jeremy Nguyen <hi@jeremy.ng> (https://jeremy.ng)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeremy-code/isomorphic-compress.git"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": {
+      "node": "./src/node/*",
+      "browser": "./src/browser/*",
+      "default": "./src/browser/*"
+    }
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "./*": {
+        "node": "./dist/node/*",
+        "browser": "./dist/browser/*",
+        "default": "./dist/browser/*"
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "oxfmt": "^0.74.0",
+    "oxlint": "^1.89.0",
+    "typescript": "^7.0.2"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.15.0",
+      "onFail": "download"
+    },
+    "runtime": {
+      "name": "node",
+      "version": "26.12.1",
+      "onFail": "download"
+    }
+  }
+}

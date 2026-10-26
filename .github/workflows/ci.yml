@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    types: [opened, synchronize]
+
+permissions: {} # Each job defines its own permissions explicitly
+
+jobs:
+  build:
+    name: Build
+    permissions:
+      contents: read # Access to check out code and install dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install pnpm and Node.js
+        uses: pnpm/setup@a0881977cd8ea73b1ed212236c99ca10dcc80cf4 # v3.1.1
+        with:
+          cache: true
+          install: true
+
+      - name: Typecheck code with TypeScript
+        run: pnpm run typecheck
+
+      - name: Check code formatting with Oxfmt
+        run: pnpm run format:check
+
+      - name: Lint code with Oxlint
+        run: pnpm run lint
+
+      - name: Build
+        run: pnpm run build
