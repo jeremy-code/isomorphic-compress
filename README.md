@@ -15,9 +15,9 @@
 ## Installation
 
 ```shell
-npm install libexif-wasm # npm
-yarn add libexif-wasm    # yarn
-pnpm add libexif-wasm    # pnpm
+npm install isomorphic-compress # npm
+yarn add isomorphic-compress    # yarn
+pnpm add isomorphic-compress    # pnpm
 ```
 
 ## Usage
