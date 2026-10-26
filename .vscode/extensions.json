@@ -2,6 +2,7 @@
   "recommendations": [
     "github.vscode-github-actions",
     "github.vscode-pull-request-github",
-    "oxc.oxc-vscode"
+    "oxc.oxc-vscode",
+    "vitest.explorer"
   ]
 }
