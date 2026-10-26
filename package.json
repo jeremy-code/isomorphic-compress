@@ -1,8 +1,16 @@
 {
   "name": "isomorphic-compress",
   "version": "0.0.0",
-  "description": "",
-  "keywords": [],
+  "description": "Isomorphic, native (de)compression with Compression Streams API and Node.js zlib",
+  "keywords": [
+    "compression",
+    "decompression",
+    "deflate",
+    "gunzip",
+    "gzip",
+    "inflate",
+    "zlib"
+  ],
   "homepage": "https://github.com/jeremy-code/isomorphic-compress#readme",
   "bugs": "https://github.com/jeremy-code/isomorphic-compress/issues",
   "license": "MIT",
