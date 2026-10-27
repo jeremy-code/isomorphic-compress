@@ -57,11 +57,11 @@ import { deflate, inflate } from "isomorphic-compress/deflate.js";
 
 The Compression Streams API is baseline available across all browsers since May 2023 for compression formats `deflate`, `gzip`, and `deflate-raw`.[^1]
 
-|                           | Chrome | Edge | Firefox | Safari |
-| ------------------------- | :----: | :--: | :-----: | :----: |
-| "deflate" compression     |   80   |  80  |   113   |  16.4  |
-| "deflate-raw" compression |  103   | 103  |   113   |  16.4  |
-| "gzip" compression        |   80   |  80  |   113   |  16.4  |
+| Compression format | Chrome | Edge | Firefox | Safari |
+| ------------------ | :----: | :--: | :-----: | :----: |
+| deflate            |   80   |  80  |   113   |  16.4  |
+| deflate-raw        |  103   | 103  |   113   |  16.4  |
+| gzip               |   80   |  80  |   113   |  16.4  |
 
 Node.js added support for `deflate`, `gzip`, and `deflateRaw` in Node v0.6.0[^2] and `util.promisify` in v8.0.0.[^3] Node.js has supported conditional exports since version 12.16.0.[^4] This package is supported for Bun v0.5.2 and Deno v2.4.
 
@@ -73,7 +73,7 @@ Node.js added support for `deflate`, `gzip`, and `deflateRaw` in Node v0.6.0[^2]
 
 ### Why should I use this over `fflate`, `pako`?
 
-In Node.js, `isomorphic-compress` uses the native zlib API; in other runtimes, including browsers, it uses the [Compression Streams API](https://developer.mozilla.org/en-US/docs/Web/API/Compression_Streams_API). This means the library has a tiny code footprint compared to JavaScript-based implementations. Furthermore, a native implementation is faster; according to Facebook benchmarks, native compression libraries outperformed their JavaScript counterparts by 20x and their WebAssembly counterparts by 10x.[^5]
+In Node.js, `isomorphic-compress` uses the native `zlib` API; in other runtimes, including browsers, it uses the [Compression Streams API](https://developer.mozilla.org/en-US/docs/Web/API/Compression_Streams_API). This means the library has a tiny code footprint compared to JavaScript-based implementations. Furthermore, a native implementation is faster; according to Facebook benchmarks, native compression libraries outperformed their JavaScript counterparts by 20x and their WebAssembly counterparts by 10x.[^5]
 
 However, there are some caveats. Since the browser implementation is backed by the Compression Streams API, the compression and decompression functions are all asynchronous. This also means that performance will suffer for small inputs due to the overhead of promises.
 
