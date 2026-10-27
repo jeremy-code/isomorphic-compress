@@ -51,6 +51,38 @@ import { deflate, inflate } from "isomorphic-compress/deflate.js";
 (await inflate(Uint8Array.fromBase64("AwA="))).toBase64(); // ""
 ```
 
+## Notes
+
+### Why should I use this over `fflate`, `pako`?
+
+In Node.js, `isomorphic-compress` uses the native zlib API; in other runtimes, including browsers, it uses the [Compression Streams API](https://developer.mozilla.org/en-US/docs/Web/API/Compression_Streams_API). This means the library has a tiny code footprint compared to JavaScript-based implementations. Furthermore, a native implementation is faster; according to Facebook benchmarks,native compression libraries outperformed their JavaScript counterparts by 20x and their WebAssembly counterparts by 10x.[^1]
+
+However, there are some caveats. Since the browser implementation is backed by the Compression Streams API, the compression and decompression functions are all asynchronous. This also means that performance will suffer for small inputs due to the overhead of promises.
+
+### Why shouldn't I just use the Compression Streams API?
+
+You probably should if you fully intend on writing runtime-agnostic code, as Node.js has supported the feature since Node 18.[^2] However, there is a large performance hit that occurs when using the Node.js Compression Streams API. Vercel found that Node.js web streams could be improved by 10x by recreating their interfaces with Node streams.[^3] Furthermore, there is also reduced performance when the data is already loaded into memory and is not streamed.
+
+By instead using the native zlib API in Node, compression and decompression have signficantly higher throughput. This package does this with [conditional exports](https://nodejs.org/api/packages.html#conditional-exports).
+
+### Why are the functions named like that?
+
+I used the function naming scheme of `fflate` for the individual functions:
+
+|           `pako`            |       `fflate`        |       Node.js `zlib`        |
+| :-------------------------: | :-------------------: | :-------------------------: |
+|    `deflate` / `inflate`    |   `zlib` / `unzlib`   |    `deflate` / `inflate`    |
+| `deflateRaw` / `inflateRaw` | `deflate` / `inflate` | `deflateRaw` / `inflateRaw` |
+|      `gzip` / `ungzip`      |   `gzip` / `gunzip`   |      `gzip` / `gunzip`      |
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Footnotes
+
+[^1]: https://github.com/whatwg/compression/blob/main/explainer.md#motivation
+
+[^2]: https://developer.mozilla.org/en-US/docs/Web/API/Compression_Streams_API#browser_compatibility
+
+[^3]: https://vercel.com/blog/we-ralph-wiggumed-webstreams-to-make-them-10x-faster
