@@ -81,5 +81,21 @@
       "version": "26.12.1",
       "onFail": "download"
     }
+  },
+  "engines": {
+    "runtime": [
+      {
+        "name": "node",
+        "version": ">=12.16.0"
+      },
+      {
+        "name": "deno",
+        "version": ">=2.4"
+      },
+      {
+        "name": "bun",
+        "version": ">=0.5.2"
+      }
+    ]
   }
 }
