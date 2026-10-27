@@ -1,6 +1,6 @@
 {
   "name": "isomorphic-compress",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Isomorphic, native (de)compression with Compression Streams API and Node.js zlib",
   "keywords": [
     "compression",
